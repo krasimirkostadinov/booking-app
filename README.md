@@ -15,8 +15,6 @@ Single-page React app for creating and managing property bookings.
 - Tailwind CSS v4
 - Zustand (persist middleware)
 - React Hook Form + Zod
-- date-fns
-
 ## Run
 
 ```bash

@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BookingForm } from './BookingForm'
-import { useBookingsStore } from '../store/useBookingsStore'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_PROPERTY_NAME } from '../constants'
+import { useBookingsStore } from '../store/useBookingsStore'
+import { BookingForm } from './BookingForm'
 
 const MOCK_VALID_FORM_DATA = {
   guestName: 'Krasimir Kostadinov',
@@ -32,10 +32,12 @@ describe('BookingForm', () => {
 
   it('shows "New booking" heading when not editing', () => {
     render(<BookingForm editingId={null} onCancelEdit={onCancelEdit} />)
-    expect(screen.getByRole('heading', { name: /new booking/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: /new booking/i }),
+    ).toBeInTheDocument()
   })
 
-  it('shows "Edit booking" heading when editing', () => {
+  it('shows "Edit booking" heading when editing', async () => {
     const { addBooking } = useBookingsStore.getState()
     addBooking({
       startDate: '2025-01-01',
@@ -46,7 +48,11 @@ describe('BookingForm', () => {
     const id = useBookingsStore.getState().bookings[0].id
 
     render(<BookingForm editingId={id} onCancelEdit={onCancelEdit} />)
-    expect(screen.getByRole('heading', { name: /edit booking/i })).toBeInTheDocument()
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /edit booking/i }),
+      ).toBeInTheDocument()
+    })
   })
 
   it('submits valid booking and adds to store', async () => {
@@ -77,9 +83,18 @@ describe('BookingForm', () => {
     const user = userEvent.setup()
     render(<BookingForm editingId={null} onCancelEdit={onCancelEdit} />)
 
-    await user.type(screen.getByLabelText(/property/i), MOCK_VALID_FORM_DATA.propertyName)
-    await user.type(screen.getByLabelText(/start date/i), MOCK_VALID_FORM_DATA.startDate)
-    await user.type(screen.getByLabelText(/end date/i), MOCK_VALID_FORM_DATA.endDate)
+    await user.type(
+      screen.getByLabelText(/property/i),
+      MOCK_VALID_FORM_DATA.propertyName,
+    )
+    await user.type(
+      screen.getByLabelText(/start date/i),
+      MOCK_VALID_FORM_DATA.startDate,
+    )
+    await user.type(
+      screen.getByLabelText(/end date/i),
+      MOCK_VALID_FORM_DATA.endDate,
+    )
 
     expect(screen.getByRole('button', { name: /create/i })).toBeDisabled()
   })

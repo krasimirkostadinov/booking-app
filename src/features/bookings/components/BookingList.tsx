@@ -1,5 +1,5 @@
 import { useBookingsStore } from '@features/bookings/store/useBookingsStore'
-import { format } from 'date-fns'
+import { formatDate } from '@shared/utils/formatDate'
 
 type BookingListProps = {
   onEdit: (id: string) => void
@@ -32,8 +32,7 @@ export function BookingList({ onEdit }: BookingListProps) {
               <p className="font-medium">{b.guestName}</p>
               <p className="text-sm text-slate-600 mt-0.5">{b.propertyName}</p>
               <p className="text-sm text-slate-600 mt-0.5">
-                {format(new Date(b.startDate), 'MMM d, yyyy')} –{' '}
-                {format(new Date(b.endDate), 'MMM d, yyyy')}
+                {formatDate(new Date(b.startDate))} – {formatDate(new Date(b.endDate))}
               </p>
             </article>
             <div className="flex gap-2 sm:shrink-0">

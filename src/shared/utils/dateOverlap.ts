@@ -1,6 +1,13 @@
-import { areIntervalsOverlapping } from 'date-fns'
+type BookingWithDates = { startDate: string; endDate: string; id: string }
 
-type BookingWithDates = { startDate: string, endDate: string, id: string }
+function intervalsOverlap(
+  start1: Date,
+  end1: Date,
+  start2: Date,
+  end2: Date,
+): boolean {
+  return start1.getTime() < end2.getTime() && start2.getTime() < end1.getTime()
+}
 
 export function hasOverlap(
   bookings: BookingWithDates[],
@@ -8,15 +15,14 @@ export function hasOverlap(
   newEnd: Date,
   excludeId?: string,
 ): boolean {
-  const interval = { start: newStart, end: newEnd }
-
   return bookings.some(
     (b) =>
       b.id !== excludeId &&
-      areIntervalsOverlapping(
-        interval,
-        { start: new Date(b.startDate), end: new Date(b.endDate) },
-        { inclusive: false },
+      intervalsOverlap(
+        newStart,
+        newEnd,
+        new Date(b.startDate),
+        new Date(b.endDate),
       ),
   )
 }

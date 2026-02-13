@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-hostfully-green: #40caa1;
+  --color-hostfully-blue: #2d2aa5;
+}

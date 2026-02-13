@@ -6,7 +6,7 @@ import { useBookingsStore } from '../store/useBookingsStore'
 import { DEFAULT_PROPERTY_NAME } from '../constants'
 
 const MOCK_VALID_FORM_DATA = {
-  guestName: 'John Doe',
+  guestName: 'Krasimir Kostadinov',
   propertyName: DEFAULT_PROPERTY_NAME,
   startDate: '2025-02-01',
   endDate: '2025-02-05',
@@ -73,16 +73,15 @@ describe('BookingForm', () => {
     expect(bookings[0]).toMatchObject(MOCK_VALID_FORM_DATA)
   })
 
-  it('shows validation error when guest name is empty', async () => {
+  it('disables Create button when guest name is empty', async () => {
     const user = userEvent.setup()
     render(<BookingForm editingId={null} onCancelEdit={onCancelEdit} />)
 
     await user.type(screen.getByLabelText(/property/i), MOCK_VALID_FORM_DATA.propertyName)
     await user.type(screen.getByLabelText(/start date/i), MOCK_VALID_FORM_DATA.startDate)
     await user.type(screen.getByLabelText(/end date/i), MOCK_VALID_FORM_DATA.endDate)
-    await user.click(screen.getByRole('button', { name: /create/i }))
 
-    expect(screen.getByRole('alert')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /create/i })).toBeDisabled()
   })
 
   it('shows overlap error when dates overlap with existing booking', async () => {
